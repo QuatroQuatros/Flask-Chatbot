@@ -1,0 +1,4 @@
+flask
+flask_socketio
+chatterbot
+chatterbot_corpus

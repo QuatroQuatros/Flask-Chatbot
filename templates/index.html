@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"  content="width=device-width" />
+	<title>Eva</title>
+
+	<style type="text/css">
+		* {
+			margin:0;
+			padding:0;
+			list-style:none;
+		}
+		section#home{
+			display:grid;
+			height:100vh;
+			align-items:center;
+			text-align:center;
+		}
+		section#chat{
+			display:none;
+			grid-template-rows:1fr min-content;
+			height:100vh;
+		}
+		section#chat form{
+			display:grid;
+			grid-template-columns:1fr min-content;
+			padding:10px;
+			background:#999;
+		}
+		section#chat form input{
+			padding:5px;
+		}
+		section#chat form button{
+			padding:5px 15px;
+		}
+		div#mensagens {
+			overflow:auto;
+			word-wrap:break-word;
+		}
+		div#mensagens p {
+			margin:5px;
+			padding:10px;
+			background:#CCC;
+			border-radius:10px;
+		}
+	</style>
+</head>
+<body>
+	<section id='home'>
+		<form>
+			<label>Seu nome:<input id='nome' placeholder='Digite seu nome' required/></label>
+			<button>Entrar</button>
+		</form>	
+	</section>
+	<section id='chat'>
+		<div id='mensagens'>
+
+		</div>
+		<form>
+		<input id=mensagem placeholder="Digite sua mensagem" required><button>Enviar</button>
+		</form>
+	</section>
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	var inome = document.querySelector('#nome');
+	var imensagem = document.querySelector('#mensagem');
+	var homeform = document.querySelector('#home form');
+	var chatform = document.querySelector('#chat form');
+	var msgdiv = document.querySelector('#mensagens');
+	var socket = io.connect('//' + document.domain + ':' + location.port);
+
+	function messagehtml(name, msg){
+		return '<p><strong>'+name+':</strong> '+msg+'</p>';
+	}
+	socket.on('message', function(data){
+		msgdiv.innerHTML+=messagehtml(data.name,data.message);
+	});
+	homeform.addEventListener('submit', function(ev){
+		document.querySelector('#home').style.display='none';
+		document.querySelector('#chat').style.display='grid';
+		ev.preventDefault();
+	});
+	chatform.addEventListener('submit', function(ev){
+		socket.emit('message',{
+			name:inome.value,
+			message:imensagem.value
+		});
+		ev.preventDefault();
+	});
+</script>
+</html>
