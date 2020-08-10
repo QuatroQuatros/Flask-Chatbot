@@ -16,6 +16,7 @@ def hello():
 def message_recv(data):
 	bot = Bot('Eva')
 	emit('message',data,broadcast=True)
+	time.sleep(3)
 	a = bot.mensagem(data)
 	emit('message',a,broadcast=True)
 
