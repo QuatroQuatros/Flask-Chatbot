@@ -21,4 +21,4 @@ def message_recv(data):
 
 
 if __name__ == '__main__':
-	socketio.run(app,'127.0.0.1',3000)
+	socketio.run(app)
